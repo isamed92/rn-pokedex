@@ -1,8 +1,9 @@
-import { Text, Image, FlatList, ActivityIndicator } from 'react-native'
+import { Text, Image, FlatList, ActivityIndicator, View } from 'react-native'
 import React from 'react'
 import { styles } from '../theme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { usePokemonPaginated } from '../hooks'
+import { FadeInImage, PokemonCard } from '../components'
 
 export const HomeScreen = () => {
   const {top} = useSafeAreaInsets()
@@ -11,16 +12,16 @@ export const HomeScreen = () => {
   return (
     <>
       <Image source={require('../assets/pokebola.png')} style={styles.pokeballBG}/>
-      {/* <Text style={{...styles.title, ...styles.globalMargin, top: top + 20,}}>Dex</Text> */}
+      <View style={{...styles.globalMargin, alignItems: 'center'}}>
       <FlatList
         data={simplePokemonList}
-        keyExtractor={(pokemon) => pokemon.id}
-        renderItem={({item}) => (
-          <Image 
-            source={{uri: item.picture}}
-            style={{width: 100, height: 100}}
-          />
+        numColumns={2}
+        // header
+        ListHeaderComponent={(
+          <Text style={{...styles.title, ...styles.globalMargin, top: top + 20, marginBottom: top + 20, paddingBottom: 10}}>Dex</Text>
         )}
+        keyExtractor={(pokemon) => pokemon.id}
+        renderItem={({item}) => <PokemonCard pokemon={item}/>}
 
         //infinite scroll
         onEndReached={loadPokemon}
@@ -30,6 +31,8 @@ export const HomeScreen = () => {
 
         ListFooterComponent={<ActivityIndicator style={{height: 100}} color='grey' size={20}/>}
       />
+
+      </View>
     </>
   )
 }
